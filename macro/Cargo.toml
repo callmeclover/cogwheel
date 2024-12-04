@@ -2,6 +2,7 @@
 name = "cogwheel-macro"
 description = "Derive macros for the Cogwheel crate."
 authors = ["Clover Johnson <clover.johnson@mailfence.com>"]
+repository = "https://github.com/callmeclover/cogwheel"
 license = "MIT"
 readme = "../README.md"
 version = "0.1.0"
