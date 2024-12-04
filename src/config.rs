@@ -167,8 +167,11 @@ impl<T: Serialize + for<'de> Deserialize<'de> + Configuration> ConfigurationBuil
             .map(|x: &OsStr| x.to_string_lossy().to_lowercase())
             .as_deref()
         {
+            #[cfg(feature = "json")]
             Some("json") => Ok(ConfigurationVariant::Json),
+            #[cfg(feature = "toml")]
             Some("toml") => Ok(ConfigurationVariant::Toml),
+            #[cfg(feature = "yaml")]
             Some("yaml" | "yml") => Ok(ConfigurationVariant::Yaml),
             None | Some(_) => Err(Error::FileIsDirectory),
         }
