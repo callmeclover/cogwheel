@@ -1,0 +1,9 @@
+some_string: "Hello, world!"
+some_bool: true
+
+# We can use comments in Cogwheel!
+
+some_nest:
+  some_int: -4
+  some_float: 3.1415926
+  some_unsigned: 2147483648
