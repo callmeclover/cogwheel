@@ -8,7 +8,7 @@ use std::{
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
-use crate::Error;
+use crate::{Error, Sparse};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 /// The representation of a configuration file type.
@@ -40,10 +40,7 @@ pub enum ConfigurationVariant {
 ///     .use_str(file, ConfigurationVariant::Toml)?
 ///     .build()?;
 /// ```
-pub trait Configuration
-where
-    Self: Serialize + for<'de> Deserialize<'de>,
-{
+pub trait Configuration: Serialize + for<'de> Deserialize<'de> {
     /// Creates a `ConfigurationBuilder` for this configuration.
     fn builder() -> ConfigurationBuilder<Self> {
         ConfigurationBuilder(None)
@@ -84,7 +81,7 @@ impl<T: Serialize + for<'de> Deserialize<'de> + Configuration> ConfigurationBuil
             .map_or_else(|| Err(Error::NoConfigurationSpecified), |data: T| Ok(data))
     }
 
-    /// Attempts to parse an `&str` `data` into a configuration struct, `T`.
+    /// Attempts to parse an `&str` into a configuration struct, `T`.
     ///
     /// ```
     /// let file: &str = r#"
@@ -202,9 +199,9 @@ impl<T: Serialize + for<'de> Deserialize<'de> + Configuration> ConfigurationBuil
     /// - The file already exists
     /// - `path` is a directory
     /// - The data was corrupt/malformed after the write
-    pub fn make<S: AsRef<Path> + ?Sized>(
+    pub fn make<P: AsRef<Path> + ?Sized>(
         mut self,
-        path: &S,
+        path: &P,
         data: &T,
         variant: Option<ConfigurationVariant>,
     ) -> Result<Self, Error> {
@@ -232,9 +229,9 @@ impl<T: Serialize + for<'de> Deserialize<'de> + Configuration> ConfigurationBuil
     /// - The file already exists
     /// - `path` is a directory
     /// - The data was corrupt/malformed after the write
-    pub fn make_default<S: AsRef<Path> + ?Sized>(
+    pub fn make_default<P: AsRef<Path> + ?Sized>(
         mut self,
-        path: &S,
+        path: &P,
         variant: Option<ConfigurationVariant>,
     ) -> Result<Self, Error>
     where
@@ -273,9 +270,9 @@ impl<T: Serialize + for<'de> Deserialize<'de> + Configuration> ConfigurationBuil
     /// This will fail if:
     /// - `path` is a directory
     /// - The data was corrupt/malformed after the write
-    pub fn make_override<S: AsRef<Path> + ?Sized>(
+    pub fn make_override<P: AsRef<Path> + ?Sized>(
         mut self,
-        path: &S,
+        path: &P,
         data: &T,
         variant: Option<ConfigurationVariant>,
     ) -> Result<Self, Error> {
@@ -302,9 +299,9 @@ impl<T: Serialize + for<'de> Deserialize<'de> + Configuration> ConfigurationBuil
     /// This will fail if:
     /// - `path` is a directory
     /// - The data was corrupt/malformed after the write
-    pub fn make_default_override<S: AsRef<Path> + ?Sized>(
+    pub fn make_default_override<P: AsRef<Path> + ?Sized>(
         mut self,
-        path: &S,
+        path: &P,
         variant: Option<ConfigurationVariant>,
     ) -> Result<Self, Error>
     where
@@ -317,5 +314,25 @@ impl<T: Serialize + for<'de> Deserialize<'de> + Configuration> ConfigurationBuil
         file.write_all(Self::gen_to_string(&T::default(), variant)?.as_bytes())?;
         self = self.use_file(path, variant)?;
         Ok(self)
+    }
+
+    pub fn replace<S: Sparse + Configuration>(
+        mut self,
+        data: &str,
+        keys: Vec<String>,
+        variant: ConfigurationVariant,
+    ) -> Result<Self, Error> {
+        let content: S = ConfigurationBuilder::<S>::gen_from_str(data, variant)?;
+        // TODO: Iterate through entries
+        todo!()
+    }
+
+    pub fn replace_from_file<S: Sparse, P: AsRef<Path> + ?Sized>(
+        mut self,
+        path: &P,
+        keys: Vec<String>,
+        variant: Option<ConfigurationVariant>,
+    ) -> Result<Self, Error> {
+        todo!()
     }
 }

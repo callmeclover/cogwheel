@@ -1,12 +1,14 @@
 //! *A customizable and unopinionated configuration library.*
 
 pub mod config;
+mod sparse;
 
 use std::io;
 
 #[allow(clippy::wildcard_imports)]
 pub use cogwheel_macro::*;
 pub use config::Configuration;
+pub use sparse::Sparse;
 
 #[derive(Debug, thiserror::Error)]
 /// The representation of an error from Cogwheel.
