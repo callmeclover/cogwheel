@@ -1,4 +1,6 @@
 use std::{
+    any::Any,
+    collections::HashMap,
     ffi::OsStr,
     fs::File,
     io::{Read, Write},
@@ -316,15 +318,41 @@ impl<T: Serialize + for<'de> Deserialize<'de> + Configuration> ConfigurationBuil
         Ok(self)
     }
 
+    fn gen_to_map<M: Serialize + for<'de> Deserialize<'de>>(
+        data: M,
+        variant: ConfigurationVariant,
+    ) -> Result<HashMap<&'static str, &'static dyn Any>, Error> {
+        todo!();
+        match variant {
+            #[cfg(feature = "json")]
+            ConfigurationVariant::Json => Ok(serde_json::from_value(serde_json::to_value(&data)?)?),
+            //#[cfg(feature = "toml")]
+            //ConfigurationVariant::Toml => Ok(toml::value::(&data)?),
+            #[cfg(feature = "yaml")]
+            ConfigurationVariant::Yaml => Ok(serde_yml::from_value(serde_yml::to_value(&data)?)?),
+        }
+    }
+
+    fn replace_internal() {
+        todo!()
+    }
+
     pub fn replace<S: Sparse + Configuration>(
         mut self,
         data: &str,
         keys: Vec<String>,
         variant: ConfigurationVariant,
     ) -> Result<Self, Error> {
-        let content: S = ConfigurationBuilder::<S>::gen_from_str(data, variant)?;
-        // TODO: Iterate through entries
-        todo!()
+        self.0.map_or_else(
+            || Err(Error::NoConfigurationSpecified),
+            |mut original: T| {
+                let content: HashMap<&str, &dyn Any> = Self::gen_to_map(
+                    ConfigurationBuilder::<S>::gen_from_str(data, variant)?,
+                    variant,
+                )?;
+                todo!()
+            },
+        )
     }
 
     pub fn replace_from_file<S: Sparse, P: AsRef<Path> + ?Sized>(

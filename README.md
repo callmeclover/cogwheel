@@ -1,11 +1,13 @@
-# Cogwheel
+# ⚙️ Cogwheel
 
 *A customizable and unopinionated configuration library.*
+
+![GitHub top language](https://img.shields.io/github/languages/top/callmeclover/cogwheel?style=flat-square) ![GitHub License](https://img.shields.io/github/license/callmeclover/cogwheel?style=flat-square) ![docs.rs](https://img.shields.io/docsrs/cogwheel?style=flat-square) ![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/cargo/cogwheel?style=flat-square) ![Crates.io Version](https://img.shields.io/crates/v/cogwheel?style=flat-square) ![Crates.io Size](https://img.shields.io/crates/size/cogwheel?style=flat-square) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-closed/callmeclover/cogwheel?style=flat-square)
 
 If you have any questions, make an issue or e-mail me!
 I may be busy, so I may be slow to respond.
 
-Please make feature requests only in issues.
+Please only make feature requests in issues.
 
 ## Example
 

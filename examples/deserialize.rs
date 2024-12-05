@@ -16,21 +16,21 @@ use common::*;
 fn main() -> Result<()> {
     let json_config: SomeBasicConfig = SomeBasicConfig::builder()
         .use_file(
-            "./examples/somebasicconfig.json",
+            "./examples/common/somebasicconfig.json",
             ConfigurationVariant::Json,
         )?
         .build()?;
 
     let toml_config: SomeBasicConfig = SomeBasicConfig::builder()
         .use_file(
-            "./examples/somebasicconfig.toml",
+            "./examples/common/somebasicconfig.toml",
             ConfigurationVariant::Toml,
         )?
         .build()?;
 
     let yaml_config: SomeBasicConfig = SomeBasicConfig::builder()
         .use_file(
-            "./examples/somebasicconfig.yaml",
+            "./examples/common/somebasicconfig.yaml",
             ConfigurationVariant::Yaml,
         )?
         .build()?;
